@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -41,8 +42,6 @@ public class WheelShooterSubsystem extends BitBucketsSubsystem {
 		public double getPow() {return power;}
 	}
 
-	
-	private boolean present = false;
 	
 	public WheelShooterSubsystem() {
 		leftWheelshooterMotorA = new WPI_TalonSRX(RobotMap.WHEEL_SHOOTER_LEFT_1_MOTOR_ID);
@@ -142,14 +141,7 @@ public class WheelShooterSubsystem extends BitBucketsSubsystem {
 		// TODO Auto-generated method stub
 		
 	}
-	public void setPresent(boolean b) {
-		present = b;
-		
-	}
-	public boolean isPresent() {
-		
-		return present;
-	}
+
 	@Override
 	public void diagnosticsInit() {
 		// TODO Auto-generated method stub
@@ -177,6 +169,7 @@ public class WheelShooterSubsystem extends BitBucketsSubsystem {
 	}
 	@Override
 	public void periodic() {
+		SmartDashboard.putString("Shooter Mode", shooterPos.toString());
 		// TODO Auto-generated method stub
 		
 	}

@@ -8,10 +8,12 @@ package org.usfirst.frc.team4183.robot;
 import java.util.HashSet;
 import java.util.Set;
 import org.usfirst.frc.team4183.robot.Robot.RunMode;
+import org.usfirst.frc.team4183.robot.subsystems.AutonomousSubsystem.Scripter;
 import org.usfirst.frc.team4183.robot.subsystems.AutonomousSubsystem.AutonomousSubsystem;
 import org.usfirst.frc.team4183.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import org.usfirst.frc.team4183.robot.subsystems.ElevatorSubsystem.ElevatorSubsystem;
 import org.usfirst.frc.team4183.robot.subsystems.IntakeSubsystem.IntakeSubsystem;
+import org.usfirst.frc.team4183.robot.subsystems.RampSubsystem.RampSubsystem;
 import org.usfirst.frc.team4183.robot.subsystems.VisionSubsystem.VisionSubsystem;
 import org.usfirst.frc.team4183.robot.subsystems.WheelShooterSubsystem.WheelShooterSubsystem;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -46,6 +48,8 @@ public class Robot extends IterativeRobot {
 	public static IntakeSubsystem intakeSubsystem;
 	public static AutonomousSubsystem autonomousSubsystem;
 	public static VisionSubsystem visionSubsystem;
+	public static RampSubsystem rampSubsystem;
+	
 	
 	// The following subsystems are mutually exclusive
 	// with regard to overall robot function cannot be considered
@@ -53,11 +57,14 @@ public class Robot extends IterativeRobot {
 	// and state exclusions we will just prevent creation.
     /// WARNING WARNING WARNING: ONLY ONE
 	public static WheelShooterSubsystem wheelShooterSubsystem;
+
 	
     public static OI oi;
 	
 	public static LightingControl lightingControl;	
 	public static NavxIMU imu;
+	
+	public SendableChooser<Integer> positionChooser;
 	
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -72,11 +79,20 @@ public class Robot extends IterativeRobot {
 		intakeSubsystem = new IntakeSubsystem();
 		autonomousSubsystem = new AutonomousSubsystem();
 		visionSubsystem = new VisionSubsystem();
+		rampSubsystem = new RampSubsystem();
 		
         /// WARNING WARNING WARNING: ONLY ONE
 		wheelShooterSubsystem = new WheelShooterSubsystem();
 		//elevatorSubsystem = new ElevatorSubsystem();
 		//springShooterSubsystem = new SpringShooterSubsystem();
+		
+		positionChooser = new SendableChooser<Integer>();
+		positionChooser.addDefault( "None", 0);
+		positionChooser.addObject( "Left", 1);
+		positionChooser.addObject( "Center", 2);
+		positionChooser.addObject( "Right", 3);
+		SmartDashboard.putData( "AutoChooser", positionChooser);
+		
 		
 		imu = new NavxIMU();
 		lightingControl = new LightingControl();
@@ -84,13 +100,18 @@ public class Robot extends IterativeRobot {
 		// Add all subsystems for debugging
 		addSubsystemToDebug(driveSubsystem);
         addSubsystemToDebug(intakeSubsystem);
+        addSubsystemToDebug(visionSubsystem);
+        addSubsystemToDebug(autonomousSubsystem);
+
         
         /// WARNING WARNING WARNING: ONLY ONE
         addSubsystemToDebug(wheelShooterSubsystem);
-        //addSubsystemToDebug(springShooterSubsystem);
         //addSubsystemToDebug(elevatorSubsystem);
 		showDebugInfo();		
+		
         CameraServer.getInstance().startAutomaticCapture();
+        
+        
 
 	}
 	
@@ -130,6 +151,9 @@ public class Robot extends IterativeRobot {
 		runMode = RunMode.AUTO;
 		oi.setAutoMode();
 
+		int position = positionChooser.getSelected();
+		if( position != 0)
+			(new Scripter( positionChooser.getSelected())).start();
 	}
 	/**
 	 * This function is called periodically during autonomous.
