@@ -43,7 +43,7 @@ public class IntakingClose extends Command {
     		return CommandUtils.stateChange(this, new CurrentLimit());
     	}
     	}
-    	
+    
     	if (Robot.oi.btnIdle.get() )
     	{
     		return CommandUtils.stateChange(this, new Deployed());

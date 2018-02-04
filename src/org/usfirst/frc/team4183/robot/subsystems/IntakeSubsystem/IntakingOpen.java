@@ -27,6 +27,7 @@ public class IntakingOpen extends Command {
     protected void execute() {
     //	Robot.intakeSubsystem.setMotorSpeed(SmartDashboard.getNumber("Shooting Speed", 0));
     	Robot.intakeSubsystem.setMotorSpeed(-0.5);
+    	Robot.intakeSubsystem.checkCurrentLimit(timeSinceInitialized());
     	}
 
     // Make this return true when this Command no longer needs to run execute()
